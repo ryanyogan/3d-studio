@@ -14,6 +14,7 @@ export function CameraRig({ children }: { children: React.ReactNode }) {
     const isMobile = window.innerWidth <= 600;
 
     // set the initial position
+    // set the initial position of the model
     let targetPosition = [-0.4, 0, 2];
     if (snap.intro) {
       if (isBreakpoint) targetPosition = [0, 0, 2];

@@ -1,28 +1,36 @@
-import { ai, fileIcon, logoShirt, stylishShirt, swatch } from "../assets";
+export type TabType = {
+  name:
+    | "colorpicker"
+    | "filepicker"
+    | "aipicker"
+    | "logoShirt"
+    | "stylishShirt";
+  icon: any;
+};
 
-export const EditorTabs = [
+export const EditorTabs: TabType[] = [
   {
     name: "colorpicker",
-    icon: swatch,
+    icon: "/assets/swatch.png",
   },
   {
     name: "filepicker",
-    icon: fileIcon,
+    icon: "/assets/file.png",
   },
   {
     name: "aipicker",
-    icon: ai,
+    icon: "/assets/ai.png",
   },
 ];
 
-export const FilterTabs = [
+export const FilterTabs: TabType[] = [
   {
     name: "logoShirt",
-    icon: logoShirt,
+    icon: "/assets/logo-tshirt.png",
   },
   {
     name: "stylishShirt",
-    icon: stylishShirt,
+    icon: "/assets/stylish-tshirt.png",
   },
 ];
 

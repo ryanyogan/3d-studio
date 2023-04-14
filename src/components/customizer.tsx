@@ -1,29 +1,81 @@
 "use client";
 
-import { EditorTabs, FilterTabs } from "@/lib/constants";
+import { EditorTabs, FilterTabs, TabType } from "@/lib/constants";
 import { fadeAnimation, slideAnimation } from "@/lib/motion";
 import { state } from "@/store";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { useSnapshot } from "valtio";
+import { ColorPicker } from "./color-picker";
 import { HomeButton } from "./home-button";
 import { Tab } from "./tab";
 
 export function Customizer() {
   const snap = useSnapshot(state);
 
+  const [activeEditorTab, setActiveEditorTab] = useState<TabType["name"]>();
+  const [activeFilterTab, setActiveFilterTab] = useState({
+    logoShirt: true,
+    stylishShirt: false,
+  });
+
+  function generateTabContent() {
+    switch (activeEditorTab) {
+      case "colorpicker": {
+        return <ColorPicker />;
+      }
+
+      default: {
+        return null;
+      }
+    }
+  }
+
+  const handleActiveFilterTab = (tabName: string) => {
+    switch (tabName) {
+      case "logoShirt":
+        state.isLogoTexture = !activeFilterTab[tabName];
+        break;
+      case "stylishShirt":
+        state.isFullTexture = !activeFilterTab[tabName];
+        break;
+      default:
+        state.isLogoTexture = true;
+        state.isFullTexture = false;
+        break;
+    }
+
+    // after setting the state, activeFilterTab is updated
+
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        // @ts-ignore
+        [tabName]: !prevState[tabName],
+      };
+    });
+  };
+
   return (
     <AnimatePresence>
       {!snap.intro && (
         <>
           <motion.div
+            key="custom"
             className="absolute top-0 left-0 z-10"
             {...slideAnimation("left")}
           >
             <div className="flex items-center min-h-screen">
               <div className="editortabs-container tabs">
                 {EditorTabs.map((tab) => (
-                  <Tab key={tab.name} tab={tab} handleClick={() => {}} />
+                  <Tab
+                    key={tab.name}
+                    tab={tab}
+                    handleClick={() => setActiveEditorTab(tab.name)}
+                  />
                 ))}
+
+                {generateTabContent()}
               </div>
             </div>
           </motion.div>
@@ -48,9 +100,10 @@ export function Customizer() {
               <Tab
                 key={tab.name}
                 isFilterTab
-                isActiveTab=""
                 tab={tab}
-                handleClick={() => {}}
+                // @ts-ignore
+                isActiveTab={activeFilterTab[tab.name]}
+                handleClick={() => handleActiveFilterTab(tab.name)}
               />
             ))}
           </motion.div>
